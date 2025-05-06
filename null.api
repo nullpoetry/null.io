@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>null.io API Diagram</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+  body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background: #0f172a;
+    color: #e0e7ff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 1rem;
+  }
+  .container {
+    max-width: 400px;
+    width: 100%;
+    background: #1e293b;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.5);
+    padding: 2rem;
+  }
+  h1 {
+    text-align: center;
+    color: #818cf8;
+    margin-bottom: 1rem;
+    font-weight: 700;
+  }
+  svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+  }
+  .endpoint {
+    fill: #6366f1;
+    cursor: pointer;
+    transition: fill 0.3s ease;
+  }
+  .endpoint:hover {
+    fill: #a5b4fc;
+  }
+  text {
+    font-size: 14px;
+    pointer-events: none;
+    user-select: none;
+    fill: #cbd5e1;
+    font-weight: 600;
+  }
+  /* Endpoint tooltip */
+  #tooltip {
+    position: absolute;
+    background: #1e293b;
+    color: #f3f4f6;
+    padding: 0.4rem 0.7rem;
+    border-radius: 6px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    pointer-events: none;
+    opacity: 0;
+    font-size: 13px;
+    font-weight: 500;
+    z-index: 10;
+    transition: opacity 0.3s ease;
+  }
+  /* Responsive */
+  @media (max-width: 400px) {
+    .container {
+      max-width: 100%;
+      padding: 1rem;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="container" role="img" aria-label="API diagram for null.io">
+  <h1>null.io API</h1>
+  <svg viewBox="0 0 400 400" aria-hidden="true" role="presentation">
+    <!-- Core circle -->
+    <circle cx="200" cy="200" r="50" fill="#6366f1" />
+    <text x="200" y="210" fill="white" font-weight="700" font-size="18" text-anchor="middle" alignment-baseline="middle">null.io</text>
+
+    <!-- Lines to endpoints -->
+    <line x1="200" y1="150" x2="200" y2="50" stroke="#818cf8" stroke-width="2" />
+    <line x1="200" y1="250" x2="200" y2="350" stroke="#818cf8" stroke-width="2" />
+    <line x1="150" y1="200" x2="50" y2="200" stroke="#818cf8" stroke-width="2" />
+    <line x1="250" y1="200" x2="350" y2="200" stroke="#818cf8" stroke-width="2" />
+
+    <line x1="150" y1="150" x2="90" y2="90" stroke="#818cf8" stroke-width="2" />
+    <line x1="250" y1="150" x2="310" y2="90" stroke="#818cf8" stroke-width="2" />
+    <line x1="150" y1="250" x2="90" y2="310" stroke="#818cf8" stroke-width="2" />
+    <line x1="250" y1="250" x2="310" y2="310" stroke="#818cf8" stroke-width="2" />
+
+    <!-- Endpoint circles -->
+    <circle class="endpoint" cx="200" cy="50" r="30" data-endpoint="/auth" />
+    <text x="200" y="55" text-anchor="middle" alignment-baseline="middle">/auth</text>
+
+    <circle class="endpoint" cx="200" cy="350" r="30" data-endpoint="/data" />
+    <text x="200" y="355" text-anchor="middle" alignment-baseline="middle">/data</text>
+
+    <circle class="endpoint" cx="50" cy="200" r="30" data-endpoint="/users" />
+    <text x="50" y="205" text-anchor="middle" alignment-baseline="middle">/users</text>
+
+    <circle class="endpoint" cx="350" cy="200" r="30" data-endpoint="/settings" />
+    <text x="350" y="205" text-anchor="middle" alignment-baseline="middle">/settings</text>
+
+    <circle class="endpoint" cx="90" cy="90" r="25" data-endpoint="/auth/login" />
+    <text x="90" y="95" text-anchor="middle" alignment-baseline="middle" font-size="13">/auth/login</text>
+
+    <circle class="endpoint" cx="310" cy="90" r="25" data-endpoint="/auth/logout" />
+    <text x="310" y="95" text-anchor="middle" alignment-baseline="middle" font-size="13">/auth/logout</text>
+
+    <circle class="endpoint" cx="90" cy="310" r="25" data-endpoint="/data/fetch" />
+    <text x="90" y="315" text-anchor="middle" alignment-baseline="middle" font-size="13">/data/fetch</text>
+
+    <circle class="endpoint" cx="310" cy="310" r="25" data-endpoint="/data/update" />
+    <text x="310" y="315" text-anchor="middle" alignment-baseline="middle" font-size="13">/data/update</text>
+  </svg>
+</div>
+<div id="tooltip"></div>
+<script>
+  const tooltip = document.getElementById('tooltip');
+
+  function showTooltip(evt) {
+    const endpoint = evt.target.getAttribute('data-endpoint');
+    if (!endpoint) return;
+    tooltip.textContent = 'Endpoint: ' + endpoint;
+    tooltip.style.opacity = '1';
+    tooltip.style.left = (evt.pageX + 15) + 'px';
+    tooltip.style.top = (evt.pageY + 15) + 'px';
+  }
+  function moveTooltip(evt) {
+    tooltip.style.left = (evt.pageX + 15) + 'px';
+    tooltip.style.top = (evt.pageY + 15) + 'px';
+  }
+  function hideTooltip() {
+    tooltip.style.opacity = '0';
+  }
+
+  document.querySelectorAll('.endpoint').forEach(circle => {
+    circle.addEventListener('mouseenter', showTooltip);
+    circle.addEventListener('mousemove', moveTooltip);
+    circle.addEventListener('mouseleave', hideTooltip);
+  });
+</script>
+</body>
+</html>
+
